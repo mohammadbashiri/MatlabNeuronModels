@@ -9,7 +9,7 @@ global R; % gas constant
 
 % initializing simulation param
 tstop = 300;
-dt    = 0.025; % ms
+dt    = 0.01; % ms
 t     = 0:dt:tstop-dt;
 N     = numel(t); 
 
@@ -23,7 +23,7 @@ N     = numel(t);
 % I2      = I_stim2 * sin(2*pi*freq2*t);
 % 
 % I = I1 + I2;
-I = ones(1,N)*10;
+I = ones(1,N)*0;
 
 % Parameters
 % var   = value       % Unit
@@ -48,14 +48,13 @@ p    = zeros(N,1);
 n    = zeros(N,1);
 
 % Membrane voltage
-v    = zeros(N,1);
 er   = -70; % resting potential
+v    = ones(N,1)*er;
 
 h(1)    = 0.8249;
 m(1)    = 0.0005;
 n(1)    = 0.0268;
 p(1)    = 0.0049;
-v(1)    = er;
 
 for i=1:N-1
     
@@ -74,10 +73,10 @@ for i=1:N-1
     tau(4) = 1/(aP + bP); inf(4) = aP/(aP + bP);
         
     % STATE update - DONE
-    m(i+1) = (inf(1) - m(i))/tau(1) + m(i);
-    h(i+1) = (inf(2) - h(i))/tau(2) + h(i);    
-    n(i+1) = (inf(3) - n(i))/tau(3) + n(i);
-    p(i+1) = (inf(4) - p(i))/tau(4) + p(i);
+    m(i+1) = ((inf(1) - m(i))/tau(1)) * dt + m(i);
+    h(i+1) = ((inf(2) - h(i))/tau(2)) * dt + h(i);    
+    n(i+1) = ((inf(3) - n(i))/tau(3)) * dt + n(i);
+    p(i+1) = ((inf(4) - p(i))/tau(4)) * dt + p(i);
        
     % BREAKPOINT
     ghkna = ghk(v(i), nai, nao); 
@@ -88,7 +87,6 @@ for i=1:N-1
     
     dvdt = (I(i) - (ina + ik + ip + il))/Cm;
     v(i+1) = v(i)+ dt*dvdt;
-    vdisp = v(i+1)
 end
 
 plot(v);
