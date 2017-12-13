@@ -67,13 +67,14 @@ for i=1:N-1
     tau_h  = 1/(aH + bH);
     h_inf  = aH * tau_h;
     
+    % Update the gating variables
     n(i+1) = ((n_inf - n(i))/tau_n) * dt + n(i);
     a(i+1) = ((a_inf - a(i))/tau_a) * dt + a(i);
     b(i+1) = ((b_inf - b(i))/tau_b) * dt + b(i);
     m(i+1) = ((m_inf - m(i))/tau_m) * dt + m(i);
     h(i+1) = ((h_inf - h(i))/tau_h) * dt + h(i);
     
-    %lets compute the condictances
+    %Compute the currents
     INA(i) = gNA*(m(i)^3)*h(i)*(ENA-u(i));
     IK(i)  = gK*(n(i)^3)*(EK-u(i));
     IA(i)  = gA*(a(i)^4)*b(i)*(EK-u(i));
